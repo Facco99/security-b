@@ -1,27 +1,28 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Url } from "url";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Article {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id:number
+  @Column()
+  title: string;
 
-    @Column()
-    title:String
+  @Column()
+  description: string;
 
-    @Column()
-    description:String
+  @Column({ type: 'decimal', precision: 9, scale: 2 })
+  price: number;
 
-    @Column({ type: 'decimal', precision: 9, scale: 2 })
-    price:number
+  @Column({ type: 'date' })
+  createdAt: Date;
 
-    @Column({ type: 'date' })
-    createdAt: Date;
+  @Column('longblob', {
+    nullable: true,
+    name: 'image',
+  })
+  image: Buffer;
 
-    @Column("blob",{
-        nullable:true,
-        name:"image"
-    })
-    image: Buffer
+  @Column()
+  imageName: string;
 }
