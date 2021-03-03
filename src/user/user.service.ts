@@ -33,6 +33,22 @@ export class UserService {
     );
   }
 
+  async findByEmail(email: string){
+    const userByEmail = await this.userRepository.findOne({
+      where:{
+        email
+      }
+    });
+    if (userByEmail) return userByEmail;
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: `user not found for provided email:${email}`,
+      },
+      HttpStatus.FORBIDDEN,
+    );
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }

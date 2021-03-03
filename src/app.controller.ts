@@ -1,12 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { LocalAuthGuard } from './auth/local-auth.guard';
+import { CreateUserDto } from './user/dto/create-user.dto';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Body() createUserDto: CreateUserDto) {
+    return this.authService.login(createUserDto);
   }
+
 }
