@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -8,8 +19,15 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Post()
-  create(@Body() createArticleDto: CreateArticleDto) {
-    return this.articleService.create(createArticleDto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(@Body() createArticleDto: CreateArticleDto, @UploadedFile() file) {
+    // TODO: filtrare file ==> solo immagine
+    console.log(file);
+    return this.articleService.create(
+      createArticleDto,
+      file.originalname,
+      file.buffer,
+    );
   }
 
   @Get()

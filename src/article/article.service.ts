@@ -7,28 +7,56 @@ import { Article } from './entities/article.entity';
 
 @Injectable()
 export class ArticleService {
-  constructor(@InjectRepository(Article)
-  private articleRepository: Repository<Article>,){}
+  constructor(
+    @InjectRepository(Article)
+    private articleRepository: Repository<Article>,
+  ) {}
 
-  async create(createArticleDto: CreateArticleDto) {
-    const createArticle = this.articleRepository.create(createArticleDto);
-    
-      return await this.articleRepository.save(createArticle);
-    }
+  async create(
+    createArticleDto: CreateArticleDto,
+    imageName: string,
+    imageSource: Buffer,
+  ) {
+    const createArticle = this.articleRepository.create({
+      ...createArticleDto,
+      image: Buffer.from(imageSource),
+      imageName,
+      createdAt: new Date(),
+    });
 
-  findAll() {
-    return `This action returns all article`;
+    const article = await this.articleRepository.save(createArticle);
+    return { ...article, imagesrc: article.image.toString('base64') };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} article`;
+  async findAll() {
+    const articles = await this.articleRepository.find();
+    return articles.map((article) => ({
+      ...article,
+      imagesrc: article.image.toString('base64'),
+    }));
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+  async findOne(id: number) {
+    const articleById = await this.articleRepository.findOne(id);
+    if (articleById)
+      return { ...articleById, imagesrc: articleById.image.toString('base64') };
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: `article not found for provided id:${id}`,
+      },
+      HttpStatus.FORBIDDEN,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  async update(id: number, updateArticleDto: UpdateArticleDto) {
+    await this.articleRepository.update(id, updateArticleDto);
+    return this.findOne(id);
+  }
+
+  async remove(id: number) {
+    const deleteArticle = await this.findOne(id);
+
+    this.articleRepository.delete(deleteArticle);
   }
 }
