@@ -1,10 +1,9 @@
 export class CreateArticleDto {
+  title: string;
 
-    title:String
+  description: string;
 
-    description:String
+  price: number;
 
-    price:number
-
-    createdAt: Date;
+  createdAt: Date;
 }

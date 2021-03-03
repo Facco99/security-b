@@ -1,3 +1,9 @@
+export class UpdateArticleDto {
+  title?: string;
 
+  description?: string;
 
-export class UpdateArticleDto {}
+  price?: number;
+
+  createdAt?: Date;
+}
