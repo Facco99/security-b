@@ -7,7 +7,6 @@ import { ArticleModule } from './article/article.module';
 import { Article } from './article/entities/article.entity';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
       keepConnectionAlive: true,
     }),
-    forwardRef(() => AuthModule),
     ArticleModule,
     UserModule,
   ],

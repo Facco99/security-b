@@ -33,11 +33,11 @@ export class UserService {
     );
   }
 
-  async findByEmail(email: string){
+  async findByEmail(email: string) {
     const userByEmail = await this.userRepository.findOne({
-      where:{
-        email
-      }
+      where: {
+        email,
+      },
     });
     if (userByEmail) return userByEmail;
     throw new HttpException(
